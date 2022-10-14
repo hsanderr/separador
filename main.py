@@ -1,30 +1,36 @@
-# import csv library
-import csv
+"""
+Henrique Sander Lourenco
+This code replace commas in arquivo_dados.txt with semicolons
+and saves it to resultado.txt
+"""
 
-# read file data
+# read arquivo_dados.txt file
 with open('arquivo_dados.txt', 'r') as file:
-    data = file.read()
+    # get file data as string
+    string = file.read()
+    
+    # cast string to list, for strings are immutable
+    lista = list(string)
 
-# write data to a csv file
-with open('arquivo_dados.csv', 'w') as file:
-    file.write(data)
+    # variable to check if comma is between quotation marks
+    numAspas = 0
 
-"""
-open csv file with "," delimiter and create
-another csv file with ";" delimiter
-"""
-with open('arquivo_dados.csv') as arquivo_dados, \
-     open('resultado.csv', 'w') as resultado:
+    # loop through list elements
+    for i, char in enumerate(lista):
 
-    datareader = csv.reader(arquivo_dados, delimiter=',')
-    csvwriter = csv.writer(resultado, delimiter=';')
-    csvwriter.writerows(datareader)
+        # if char is a quotation mark and previous one isn't a backslash,
+        # increment numAspas
+        if char == '"' and lista[i - 1] != "\\":
+            numAspas += 1
 
-# read csv file lines with ";" delimiter
-with open('resultado.csv', 'r') as file:
-    result = file.readlines()
-    result = result[:-1] # removes last line, which is empty
+        # if numAspas is even, char isn't between quotation marks    
+        if numAspas % 2 == 0:
+            if char == ",":
+                lista[i] = ";"
 
-# write result to txt file
+# join list items into a string 
+resultado = ''.join(lista)
+
+# write results to resultado.txt
 with open('resultado.txt', 'w') as file:
-    file.writelines(result)
+    file.write(resultado)
